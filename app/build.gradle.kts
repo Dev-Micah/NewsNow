@@ -58,4 +58,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.news.api.java)
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc02")
 }
