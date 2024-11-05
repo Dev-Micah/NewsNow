@@ -17,6 +17,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.micah.newsnow.ui.theme.NewsNowTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +29,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
         setContent {
+            val navController = rememberNavController()
             NewsNowTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                    Column(
@@ -37,7 +42,21 @@ class MainActivity : ComponentActivity() {
                           fontSize = 25.sp,
                           fontFamily = FontFamily.Serif
                           )
-                       HomePage(newsViewModel)
+                       NavHost(
+                           navController = navController,
+                           startDestination = HomePageScreen
+
+                       ) {
+                           composable<HomePageScreen>{
+                               HomePage(newsViewModel, navController)
+                           }
+                           composable<NewsArticleScreen>{
+                               val args = it.toRoute<NewsArticleScreen>()
+                               NewsArticlePage(args.url)
+                           }
+
+                       }
+
                    }
                 }
             }
