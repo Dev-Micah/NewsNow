@@ -38,12 +38,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.kwabenaberko.newsapilib.models.Article
 
 @Composable
 fun HomePage(
-    newsViewModel: NewsViewModel
+    newsViewModel: NewsViewModel,
+    navController: NavHostController
 ){
     val articles by newsViewModel.articles.observeAsState(emptyList())
 
@@ -53,7 +56,7 @@ fun HomePage(
             modifier = Modifier.fillMaxSize()
         ){
            items(articles){article ->
-           ArticleItem(article)
+           ArticleItem(article, navController)
 
            }
 
@@ -61,10 +64,13 @@ fun HomePage(
     }
 }
 @Composable
-fun ArticleItem(article: Article){
+fun ArticleItem(article: Article, navController: NavHostController){
     Card(
         modifier = Modifier.padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = {
+            navController.navigate(NewsArticleScreen(article.url))
+        }
 
     ) {
         Row(modifier = Modifier.fillMaxWidth()
@@ -114,11 +120,29 @@ fun CategoriesBar(newsViewModel: NewsViewModel){
         if(isSearchExpanded){
             OutlinedTextField(
                 modifier = Modifier.padding(8.dp)
-                    .height(48.dp)
+                    .height(50.dp)
                     .border(1.dp, Color.Gray, CircleShape)
                     .clip(CircleShape),
                 value = searchQuery,
-                onValueChange = {searchQuery = it}
+                onValueChange = {searchQuery = it},
+
+                trailingIcon = {
+                    IconButton(onClick = {
+                        isSearchExpanded = false
+                        if(searchQuery.isNotEmpty()){
+                            newsViewModel.fetchEverythingWithQuery(searchQuery)
+                        }
+
+                    }){
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search Icon"
+
+
+                        )
+
+                    }
+                }
 
             )
         }else{
