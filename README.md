@@ -5,3 +5,4 @@ HomeScreen user can search for news
 
 Categories bar
 ![WhatsApp Image 2024-11-06 at 11 38 52_5fd3885d](https://github.com/user-attachments/assets/5c81c858-a985-45fc-b58e-e099a8b52c9f)
+Video to show App navigation
